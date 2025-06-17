@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from './components/navbar';
+import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import SignUpPage from './pages/SignUppage';
 import VerifyOtpPage from './pages/VerifyOtpPage';
