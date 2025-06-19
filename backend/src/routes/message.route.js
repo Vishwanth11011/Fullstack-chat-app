@@ -11,13 +11,11 @@ const router = express.Router();
 
 router.get("/user",protectRoute,getUsersfForSidebar);
 
-// router.get("/user",protectRoute,getUsersfForSidebar);
-
 router.get("/user/:id", protectRoute,getMessages);
 
 router.post("/send/:id", protectRoute, sendMessage);
 
 //router.post("/mark-seen",protectRoute, markMessagesAsSeen);
-
+// router.get("/user",protectRoute,getUsersfForSidebar);
 
 export default router;

@@ -40,11 +40,11 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
-app.use(fileUpload({
-  useTempFiles: true,
-  tempFileDir: '/tmp/', // required if you want to use tempFilePath for Cloudinary upload
-  limits: { fileSize: 10 * 1024 * 1024 },
-}));
+// app.use(fileUpload({
+//   useTempFiles: true,
+//   tempFileDir: '/tmp/', // required if you want to use tempFilePath for Cloudinary upload
+//   limits: { fileSize: 10 * 1024 * 1024 },
+// }));
 
 
 // app.use(bodyParser.json({ limit: '10mb' })); // JSON limit → keep small
