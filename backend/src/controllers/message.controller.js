@@ -22,38 +22,38 @@ export const getUsersfForSidebar = async (req, res)=>{
     }
 };
 
-export const getUsersWithUnreadCounts = async (req, res) => {
-    try {
-        const loggedInUserId = req.user._id;
+// export const getUsersWithUnreadCounts = async (req, res) => {
+//     try {
+//         const loggedInUserId = req.user._id;
 
-        const users = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+//         const users = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
 
-        const usersWithUnreadCounts = await Promise.all(
-            users.map(async (user) => {
-                const unreadCount = await Message.countDocuments({
-                    senderId: user._id,
-                    receiverId: loggedInUserId,
-                    seen: false
-                });
+//         const usersWithUnreadCounts = await Promise.all(
+//             users.map(async (user) => {
+//                 const unreadCount = await Message.countDocuments({
+//                     senderId: user._id,
+//                     receiverId: loggedInUserId,
+//                     seen: false
+//                 });
 
-                return {
-                    _id: user._id,
-                    fullName: user.fullName,
-                    email: user.email,
-                    profilePic: user.profilePic,
-                    createdAt: user.createdAt,
-                    unreadCount
-                };
-            })
-        );
+//                 return {
+//                     _id: user._id,
+//                     fullName: user.fullName,
+//                     email: user.email,
+//                     profilePic: user.profilePic,
+//                     createdAt: user.createdAt,
+//                     unreadCount
+//                 };
+//             })
+//         );
 
-        res.status(200).json(usersWithUnreadCounts);
+//         res.status(200).json(usersWithUnreadCounts);
 
-    } catch (error) {
-        console.error("Error in getUsersWithUnreadCounts:", error.message);
-        res.status(500).json({ error: "Internal server error" });
-    }
-};
+//     } catch (error) {
+//         console.error("Error in getUsersWithUnreadCounts:", error.message);
+//         res.status(500).json({ error: "Internal server error" });
+//     }
+// };
 
 // const users = await User.find({ _id: { $ne: req.user._id } });
 
@@ -96,80 +96,80 @@ export const getMessages = async(req,res)=>{
 };
 
 //main
-// export const sendMessage = async (req, res) => {
-//   try {
-//     const { text, image } = req.body;
-//     const recieverId = req.params.id;
-//     const senderId = req.user._id;
-
-//     let imageUrl = null;
-//     if (image) {
-//       try {
-//         const uploadResponse = await cloudinary.uploader.upload(image);
-//         imageUrl = uploadResponse.secure_url;
-//       } catch (err) {
-//         console.error("Cloudinary upload failed:", err.message);
-//         return res.status(500).json({ error: "Image upload failed" });
-//       }
-//     }
-
-//     const newMessage = new Message({
-//       senderId,
-//       recieverId,
-//       text,
-//       image: imageUrl,
-//     });
-
-//     await newMessage.save();
-
-//     const receiverSocketId = getReceiverSocketId(recieverId);
-//     if (receiverSocketId) {
-//       io.to(receiverSocketId).emit("newMessage", newMessage);
-//     }
-
-//     res.status(200).json(newMessage);
-//   } catch (error) {
-//     console.log("Error in sendMessage controller:", error.message);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
-
-
 export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
-    const { id: receiverId } = req.params;
+    const recieverId = req.params.id;
     const senderId = req.user._id;
 
-    let imageUrl;
-
+    let imageUrl = null;
     if (image) {
-      const uploadResponse = await cloudinary.uploader.upload(image, {
-        folder: "chat-app/messages",
-      });
-      imageUrl = uploadResponse.secure_url;
+      try {
+        const uploadResponse = await cloudinary.uploader.upload(image);
+        imageUrl = uploadResponse.secure_url;
+      } catch (err) {
+        console.error("Cloudinary upload failed:", err.message);
+        return res.status(500).json({ error: "Image upload failed" });
+      }
     }
 
     const newMessage = new Message({
       senderId,
-      receiverId,
+      recieverId,
       text,
       image: imageUrl,
     });
 
     await newMessage.save();
 
-    const receiverSocketId = getReceiverSocketId(receiverId);
+    const receiverSocketId = getReceiverSocketId(recieverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
     res.status(200).json(newMessage);
   } catch (error) {
-    console.error("Error in sendMessage controller:", error.message);
+    console.log("Error in sendMessage controller:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+// export const sendMessage = async (req, res) => {
+//   try {
+//     const { text, image } = req.body;
+//     const { id: receiverId } = req.params;
+//     const senderId = req.user._id;
+
+//     let imageUrl;
+
+//     if (image) {
+//       const uploadResponse = await cloudinary.uploader.upload(image, {
+//         folder: "chat-app/messages",
+//       });
+//       imageUrl = uploadResponse.secure_url;
+//     }
+
+//     const newMessage = new Message({
+//       senderId,
+//       receiverId,
+//       text,
+//       image: imageUrl,
+//     });
+
+//     await newMessage.save();
+
+//     const receiverSocketId = getReceiverSocketId(receiverId);
+//     if (receiverSocketId) {
+//       io.to(receiverSocketId).emit("newMessage", newMessage);
+//     }
+
+//     res.status(200).json(newMessage);
+//   } catch (error) {
+//     console.error("Error in sendMessage controller:", error.message);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
 
 
 // export const sendMessage = async (req, res) => {

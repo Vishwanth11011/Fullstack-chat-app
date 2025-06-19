@@ -2,17 +2,20 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import http from "http"; 
 import path from "path";
-
-import fileUpload from "express-fileupload";
 import { connectDB } from "./lib/db.js";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
-import {app,server} from "./lib/socket.js"
+import { initializeSocket, io } from "./lib/socket.js";
 import bodyParser from "body-parser";
 
 dotenv.config();
+
+const app = express(); // <--- Create app here!
+const server = http.createServer(app);
+
+initializeSocket(server); // <--- Call the initializer function
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
