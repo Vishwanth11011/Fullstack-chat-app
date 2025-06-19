@@ -11,17 +11,11 @@ const router = express.Router()
 
 router.post("/initiate-signup", initiateSignup);
 router.post("/verify-otp", verifyOtpAndSignup);
-
-
-// router.post("/initiate-signup", initiateSignup);  
-// router.post("/verify-otp", verifyOtp);             
+          
 
 router.post("/login", login);
 
 router.post("/logout", logout);
-
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
 
 router.put("/update-profile", protectRoute ,updateProfile);
 
